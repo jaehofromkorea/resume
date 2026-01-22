@@ -25,6 +25,7 @@
 
         html {
             scroll-behavior: smooth;
+            overflow-x: hidden;
         }
 
         body {
@@ -1101,25 +1102,28 @@
 
             nav {
                 padding: 15px 20px;
-                justify-content: flex-start;
+                min-height: 54px;
             }
 
             .nav-links {
                 position: fixed;
                 top: 0;
-                right: -100%;
+                right: 0;
                 width: 100%;
                 height: 100vh;
                 background: var(--darker);
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
-                transition: right 0.3s ease;
+                transition: transform 0.3s ease, visibility 0.3s ease;
                 gap: 30px;
+                transform: translateX(100%);
+                visibility: hidden;
             }
 
             .nav-links.active {
-                right: 0;
+                transform: translateX(0);
+                visibility: visible;
             }
 
             .nav-links a {
@@ -1129,12 +1133,14 @@
 
             .menu-toggle {
                 display: flex;
+                flex-shrink: 0;
             }
 
             .lang-switch {
                 margin-left: auto;
                 margin-right: 15px;
                 gap: 4px;
+                flex-shrink: 0;
             }
 
             .lang-btn {
@@ -1507,6 +1513,72 @@
             }
         }
 
+        /* Lightbox Modal */
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .lightbox.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .lightbox-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .lightbox.active .lightbox-content {
+            transform: scale(1);
+        }
+
+        .lightbox-content img {
+            max-width: 100%;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 5px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            width: 35px;
+            height: 35px;
+            background: none;
+            border: 2px solid var(--text-muted);
+            border-radius: 50%;
+            color: var(--text);
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .lightbox-close:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: rotate(90deg);
+        }
+
         /* Touch-friendly tap targets */
         @media (hover: none) {
             .nav-links a,
@@ -1716,9 +1788,9 @@
                         </div>
                     </div>
                     <ul class="timeline-details">
-                        <li data-i18n="ausDetail1">Head Chef experience</li>
+                        <li data-i18n="ausDetail1">Developed speed and efficiency in high-volume service</li>
                         <li data-i18n="ausDetail2">Acquired multicultural cooking techniques</li>
-                        <li data-i18n="ausDetail3">Expanded expertise in wines and spirits</li>
+                        <li data-i18n="ausDetail3">Basic wine & food pairing knowledge</li>
                     </ul>
                 </div>
             </div>
@@ -1750,7 +1822,7 @@
                     </div>
                     <ul class="timeline-details">
                         <li data-i18n="korDetail1">Menu development and plating innovation</li>
-                        <li data-i18n="korDetail2">Advanced wine studies</li>
+                        <li data-i18n="korDetail2">Deepened understanding of cheese and charcuterie</li>
                         <li data-i18n="korDetail3">Premium ingredient sourcing</li>
                     </ul>
                 </div>
@@ -1777,7 +1849,7 @@
                     <ul class="timeline-details">
                         <li data-i18n="usaDetail1">Oversaw entire kitchen operations</li>
                         <li data-i18n="usaDetail2">Managed ordering and staff scheduling</li>
-                        <li data-i18n="usaDetail3">Established FOH-BOH communication system</li>
+                        <li data-i18n="usaDetail3">Established communication system between service and kitchen teams</li>
                     </ul>
                 </div>
             </div>
@@ -1831,21 +1903,21 @@
                     <h4 data-i18n="edu1Name">Eungok Vocational School</h4>
                     <span data-i18n="edu1Desc">Web & App Content Creation</span>
                 </div>
-                <span class="education-period">2021 - 2022</span>
+                <span class="education-period">2021 - 2022 (Seoul)</span>
             </div>
             <div class="education-item" data-aos="fade-up" data-aos-delay="200">
                 <div class="education-info">
                     <h4 data-i18n="edu2Name">Apex Institute of Education</h4>
                     <span data-i18n="edu2Desc">Culinary Arts Education</span>
                 </div>
-                <span class="education-period">2015 - 2019</span>
+                <span class="education-period">2015 - 2019 (Sydney)</span>
             </div>
             <div class="education-item" data-aos="fade-up" data-aos-delay="300">
                 <div class="education-info">
                     <h4 data-i18n="edu3Name">Korea Culinary Arts High School</h4>
                     <span data-i18n="edu3Desc">Culinary Arts Specialist</span>
                 </div>
-                <span class="education-period">2010 - 2012</span>
+                <span class="education-period">2010 - 2012 (Seoul)</span>
             </div>
         </div>
     </section>
@@ -1941,6 +2013,14 @@
             </div>
         </div>
     </section>
+
+    <!-- Lightbox Modal -->
+    <div class="lightbox" id="lightbox">
+        <div class="lightbox-content">
+            <button class="lightbox-close" id="lightboxClose">&times;</button>
+            <img src="" alt="" id="lightboxImg">
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer>
@@ -2116,17 +2196,17 @@
                 usa: 'USA',
                 viewOnMaps: '→ View on Google Maps',
                 // Australia details
-                ausDetail1: 'Head Chef experience',
+                ausDetail1: 'Developed speed and efficiency in high-volume service',
                 ausDetail2: 'Acquired multicultural cooking techniques',
-                ausDetail3: 'Expanded expertise in wines and spirits',
+                ausDetail3: 'Basic wine & food pairing knowledge',
                 // Korea details
                 korDetail1: 'Menu development and plating innovation',
-                korDetail2: 'Advanced wine studies',
+                korDetail2: 'Deepened understanding of cheese and charcuterie',
                 korDetail3: 'Premium ingredient sourcing',
                 // USA details
                 usaDetail1: 'Oversaw entire kitchen operations',
                 usaDetail2: 'Managed ordering and staff scheduling',
-                usaDetail3: 'Established FOH-BOH communication system',
+                usaDetail3: 'Established communication system between service and kitchen teams',
                 // Cover Letter
                 coverLetterTitle: 'Cover Letter',
                 clGreeting: 'Dear Sir or Madam,',
@@ -2198,17 +2278,17 @@
                 usa: 'États-Unis',
                 viewOnMaps: '→ Voir sur Google Maps',
                 // Australia details
-                ausDetail1: 'Expérience de Chef de Cuisine',
+                ausDetail1: 'Développement de la rapidité et efficacité en service intense',
                 ausDetail2: 'Acquisition de techniques culinaires multiculturelles',
-                ausDetail3: 'Expertise approfondie en vins et spiritueux',
+                ausDetail3: 'Connaissances de base en accords mets-vins',
                 // Korea details
                 korDetail1: 'Développement de menus et innovation en dressage',
-                korDetail2: 'Études avancées en œnologie',
+                korDetail2: 'Approfondissement des connaissances en fromages et charcuterie',
                 korDetail3: 'Approvisionnement en ingrédients premium',
                 // USA details
                 usaDetail1: 'Supervision de toutes les opérations de cuisine',
                 usaDetail2: 'Gestion des commandes et planification du personnel',
-                usaDetail3: 'Mise en place du système de communication FOH-BOH',
+                usaDetail3: 'Mise en place d\'un système de communication entre le service et la cuisine',
                 // Cover Letter
                 coverLetterTitle: 'Lettre de Motivation',
                 clGreeting: 'Madame, Monsieur,',
@@ -2285,6 +2365,43 @@
             btn.addEventListener('click', () => {
                 switchLanguage(btn.dataset.lang);
             });
+        });
+
+        // Lightbox functionality
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightboxImg');
+        const lightboxClose = document.getElementById('lightboxClose');
+
+        // Open lightbox on gallery image click
+        document.querySelectorAll('.gallery-item img').forEach(img => {
+            img.addEventListener('click', () => {
+                lightboxImg.src = img.src;
+                lightboxImg.alt = img.alt;
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        // Close lightbox
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        lightboxClose.addEventListener('click', closeLightbox);
+
+        // Close on background click
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) {
+                closeLightbox();
+            }
+        });
+
+        // Close on ESC key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+                closeLightbox();
+            }
         });
     </script>
 </body>
